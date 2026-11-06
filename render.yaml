@@ -1,0 +1,23 @@
+databases:
+  - name: logen-khpay-db
+    plan: free
+services:
+  - type: web
+    name: logen-khpay
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: {name: logen-khpay-db, property: connectionString}
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FERNET_KEY
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: PROVIDER_CHECK_URL
+        sync: false
